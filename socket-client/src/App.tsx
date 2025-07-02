@@ -2,10 +2,13 @@ import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { MapContainer, TileLayer, Marker, Popup ,Polygon} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import Map from "./Maps/Map";
+import SearchContacts from "./page/SearchContacts";
 
 const socket = io("http://localhost:5000");
 
 function App() {
+  
   useEffect(() => {
     socket.on("connect", () => {
       const engine = socket.io.engine;
@@ -21,17 +24,19 @@ function App() {
   }, []);
 
 
-const gulshanArea = [
-  [23.778, 90.410],
-  [23.779, 90.420],
-  [23.772, 90.425],
-  [23.770, 90.415],
-];
 
 
 
   return (
-    <div className="p-10">
+    <div className="p-10 flex gap-x-7 w-full">
+
+      <section className="border-2 min-h-40 w-full">
+        <SearchContacts/>
+      </section>
+
+      <section className="border-2 w-full">
+        <Map/>
+      </section>
       
     </div>
   );
