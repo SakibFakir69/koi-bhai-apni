@@ -1,13 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { MapContainer, TileLayer, Marker, Popup ,Polygon} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Map from "./Maps/Map";
 import SearchContacts from "./page/SearchContacts";
 
-const socket = io("http://localhost:5000");
+export const socket = io("http://localhost:5000");
 
 function App() {
+
+  const [ userList , setUserList ] = useState([])
   
   useEffect(() => {
     socket.on("connect", () => {
@@ -17,11 +19,22 @@ function App() {
         console.log("socket is connected");
       }
 
+
+      // all- user
+
+
+
       engine.on("close", (reason) => {
         console.log(`server is closed ${reason}`);
       });
     });
   }, []);
+
+
+
+  // show user 
+
+  console.log(userList , `total user ${userList.length} `);
 
 
 
