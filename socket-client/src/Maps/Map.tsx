@@ -23,22 +23,20 @@ interface NewPosition {
   lng: number;
 }
 
-
 const MyLiveMap = () => {
-
   const [position, setPosition] = useState<Position | null>(null);
-  const [ sendLocation , setSendLocation ]= useState<Position | null > (null);
-  const [ reciveLocation , setReciveLocation ] = useState<NewPosition | null> (null);
-
+  const [sendLocation, setSendLocation] = useState<Position | null>(null);
+  const [reciveLocation, setReciveLocation] = useState<NewPosition | null>(
+    null
+  );
 
   useEffect(() => {
-    console.log("insid")
+    console.log("insid");
     if ("geolocation" in navigator) {
-
-        console.log("ok")
+      console.log("ok");
       navigator.geolocation.watchPosition(
         (pos) => {
-            console.log("ok2")
+          console.log("ok2");
           const { latitude, longitude } = pos.coords;
           setPosition({ lat: latitude, lng: longitude });
 
@@ -53,8 +51,8 @@ const MyLiveMap = () => {
             },
             {
               enableHighAccuracy: true,
-              timeout: 30000,
-           
+              timeout: 10000,
+              maximumAge:0,
             }
           );
 
@@ -70,56 +68,31 @@ const MyLiveMap = () => {
   }, []);
   const defaultPosition = { lat: 23.8103, lng: 90.4125 }; // Dhaka, Bangladesh
 
+  // accpeted por postion postion change hoye
+  // tahola location pataba
 
-
-  // accpeted por postion postion change hoye 
-  // tahola location pataba 
-
-
-  // have 2 case 
+  // have 2 case
   // sender and reciver
 
-
-  useEffect(()=>{
-    
-
-    socket.emit('send-location', {lat:position?.lat, lng:position?.lng, id:socket.id});
-    socket.on('recive-location', (data)=>{
-     
+  useEffect(() => {
+    socket.emit("send-location", {
+      lat: position?.lat,
+      lng: position?.lng,
+      id: socket.id,
+    });
+    socket.on("recive-location", (data) => {
       setReciveLocation(data);
-
-
-    })
-
-
-
-
-  },[position])
-  // jodi postion change hoye location pataba 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
+  }, [position]);
+  // jodi postion change hoye location pataba
 
   console.log(position, "pos");
-  console.log(reciveLocation,'recive');
+  console.log(reciveLocation, "recive");
 
   return (
     <>
       {position ? (
         <MapContainer
-        
           center={[position.lat, position.lng]}
           zoom={13}
           style={{ height: "100vh" }}
@@ -131,16 +104,18 @@ const MyLiveMap = () => {
           <Marker position={[position.lat, position.lng]} icon={icon}>
             <Popup>You are here!</Popup>
           </Marker>
-          {
-            reciveLocation && (<div>
-
-              <Marker position={[reciveLocation?.lat, reciveLocation?.lng]}>
+          {reciveLocation && (
+            <div>
+              <Marker
+                position={[
+                  reciveLocation?.lat ?? 23.7588 - 1,
+                  reciveLocation?.lng ?? 90.3667 - 1,
+                ]}
+              >
                 <Popup>Recive usr</Popup>
-
               </Marker>
-
-            </div>) 
-          }
+            </div>
+          )}
         </MapContainer>
       ) : (
         <p>Getting location...</p>
