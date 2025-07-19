@@ -32,6 +32,7 @@ const MyLiveMap = () => {
 
   useEffect(() => {
     console.log("insid");
+
     if ("geolocation" in navigator) {
       console.log("ok");
       navigator.geolocation.watchPosition(
@@ -112,7 +113,7 @@ const MyLiveMap = () => {
                   reciveLocation?.lng ?? 90.3667 - 1,
                 ]}
               >
-                <Popup>Recive usr</Popup>
+                <Popup>Recive user</Popup>
               </Marker>
             </div>
           )}
