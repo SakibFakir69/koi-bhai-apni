@@ -1,37 +1,33 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
+// object or class
 
-// object or class 
-
-interface User{
-    name?:string,
-    email:string,
-    password:string,
+interface User {
+  name?: string;
+  email: string;
+  password: string;
 }
 
-const userInitialState:User = {
-    name:"",
-    email:"",
-    password:""
-}
+const userInitialState: User = {
+  name: "",
+  email: "",
+  password: "",
+};
 
-export const authSlices=createSlice({
+export const authSlices = createSlice({
+  name: "auth",
+  initialState: userInitialState,
 
-    name:"auth",
-    initialState:userInitialState,
+  reducers: {
+    signUp: (state, action: PayloadAction<User>) => {
+      state.email = action.payload.email;
+      state.password = action.payload.password;
+      state.name = action.payload.name;
+    },
+  },
+});
 
-    reducers:{
-        signUp:(state,action)=>{
-
-            state.push(action.payload);
-
-
-        },
-    }
-
-
-})
-
-export const {signUp} = authSlices.actions;
+export const { signUp } = authSlices.actions;
 
 export default authSlices.reducer;

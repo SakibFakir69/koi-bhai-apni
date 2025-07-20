@@ -21,6 +21,7 @@ const io = new Server(httpServer, {
 // get socket connection
 initSocket(io);
 
+// use iff
 const startServer = async () => {
   try {
     if (!DB_URL) {

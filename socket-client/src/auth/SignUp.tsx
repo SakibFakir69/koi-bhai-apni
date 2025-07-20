@@ -1,5 +1,9 @@
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { signUp } from "../redux/features/auth/authSlice";
+import { Auth } from "../firebase/config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 interface FormValues {
   name: string;
@@ -7,15 +11,42 @@ interface FormValues {
   password: string;
 }
 
-const MyForm = () => {
+const SignUp = () => {
+  const dispatch = useDispatch();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    console.log("Form Data:", data);
+  const onSubmit = async (data: any) => {
+    try {
+      const { name, email, password } = data;
+
+      const userCredintial = await createUserWithEmailAndPassword(
+        Auth,
+        email,
+        password
+      );
+      const user = userCredintial.user;
+
+      console.log("Form Data:", data);
+      dispatch(signUp({
+        name,
+        email: user.email || " ",
+        password:password
+      }));
+
+      if(user.email){
+        alert("Sign up")
+      }
+      console.log(user)
+
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -60,4 +91,4 @@ const MyForm = () => {
   );
 };
 
-export default MyForm;
+export default SignUp;

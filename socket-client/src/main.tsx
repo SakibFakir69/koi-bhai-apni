@@ -5,7 +5,8 @@ import App from './App.tsx'
 import { Provider } from 'react-redux'
 import { store } from './redux/store.ts'
 import { RouterProvider } from 'react-router'
-import { router } from './routers/router.ts'
+import { router } from './routers/router.tsx'
+
 
 createRoot(document.getElementById('root')!).render(
 
