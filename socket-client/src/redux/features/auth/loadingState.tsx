@@ -4,8 +4,20 @@ type isActive =boolean;
 
 const isLogIn: isActive = false;
 
-const loaddingState = createSlice({
+export const loaddingState = createSlice({
   name: "loading",
   initialState: isLogIn,
-  reducers: {},
+  reducers: {
+
+    userStatus:(state, payload)=>{
+      // state.push(payload.action);
+      
+
+    }
+
+
+  },
 });
+
+
+export default loaddingState.reducer;

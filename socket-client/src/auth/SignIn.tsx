@@ -1,9 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { signUp } from "../redux/features/auth/authSlice";
+import { signUp, signIn } from "../redux/features/auth/authSlice";
 import { Auth } from "../firebase/config";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 
@@ -13,7 +16,7 @@ interface FormValues {
   password: string;
 }
 
-const SignUp = () => {
+function SignIn() {
   const goHome = useNavigate();
   const dispatch = useDispatch();
 
@@ -27,7 +30,7 @@ const SignUp = () => {
     try {
       const { name, email, password } = data;
 
-      const userCredintial = await createUserWithEmailAndPassword(
+      const userCredintial = await signInWithEmailAndPassword(
         Auth,
         email,
         password
@@ -36,15 +39,14 @@ const SignUp = () => {
 
       console.log("Form Data:", data);
       dispatch(
-        signUp({
-          name,
+        signIn({
           email: user.email || " ",
           password: password,
         })
       );
 
       if (user.email) {
-        alert("Sign up");
+        alert("Sign in");
         goHome("/");
       }
       console.log(user);
@@ -54,23 +56,19 @@ const SignUp = () => {
   };
 
   return (
-    <div className=" bg-[#F9FAFB] min-h-screen md:p-2 p-10 flex justify-center items-center rounded w-full">
+    <div className=" bg-[#F9FAFB] min-h-screen md:p-2 p-8 flex justify-center items-center rounded w-full">
 
-      <section className="flex flex-col bg-[#FFFFFF] md:w-1/2 w-full  border   border-black/10 p-8 h-[580px]">
-
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4  ">
-
+      <section
+   
+        className=" flex-col bg-[#FFFFFF] md:w-1/2 w-full  border   border-black/10 p-10 h-[550px]"
+      >
+        <form  onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-4  ">
           <h1 className="text-4xl text-center font-semibold">Koi Bhai Apni</h1>
           <h3 className="text-3xl font-bold text-center text-green-500 mb-10">
             Welcome
           </h3>
-          {/* Name */}
-          <input
-            placeholder="Name"
-            {...register("name", { required: "Name is required" })}
-             className="py-2 border border-stone-400/20 rounded px-3 "
-          />
-          {errors.name && <span>{errors.name.message}</span>}
+          {/* input */}
+
           {/* Email */}
           <input
             type="email"
@@ -110,9 +108,9 @@ const SignUp = () => {
             value="Submit"
             className="py-2 bg-[#3758F9] text-white rounded cursor-pointer"
           />
+          {/* option */}
         </form>
-
-        <div className="flex justify-center flex-col items-center gap-y-4 mt-8">
+          <div className="flex justify-center flex-col items-center gap-y-4 mt-8">
           <h1 className="text-2xl font-semibold text-stone-600">
             Connect With
           </h1>
@@ -125,14 +123,16 @@ const SignUp = () => {
 
           <p>
             You have't account{" "}
-            <Link className="text-blue-500" to={"/auth/signin"}>
-              Sign in
+            <Link className="text-blue-500" to={"/auth/signup"}>
+              Sign up
             </Link>
           </p>
         </div>
       </section>
+
+     
     </div>
   );
-};
+}
 
-export default SignUp;
+export default SignIn;

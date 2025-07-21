@@ -25,9 +25,13 @@ export const authSlices = createSlice({
       state.password = action.payload.password;
       state.name = action.payload.name;
     },
+    signIn:  (state, action: PayloadAction<User>) => {
+      state.email = action.payload.email;
+      state.password = action.payload.password;
+    },
   },
 });
 
-export const { signUp } = authSlices.actions;
+export const { signUp,signIn } = authSlices.actions;
 
 export default authSlices.reducer;
