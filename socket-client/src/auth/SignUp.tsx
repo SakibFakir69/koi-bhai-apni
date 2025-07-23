@@ -6,7 +6,8 @@ import { Auth } from "../firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
-
+import axios from 'axios'
+import { uuid } from 'uuidv4';
 interface FormValues {
   name: string;
   email: string;
@@ -14,6 +15,7 @@ interface FormValues {
 }
 
 const SignUp = () => {
+  
   const goHome = useNavigate();
   const dispatch = useDispatch();
 
@@ -40,8 +42,26 @@ const SignUp = () => {
           name,
           email: user.email || " ",
           password: password,
+          userId:uuid(),
         })
       );
+
+      // sign up api here ->>>
+
+      const userData = {
+        ...data,
+         userId:uuid()
+      }
+
+
+      axios.post('http://localhost:5000/api/create-user',userData)
+      .then((res)=>{
+        console.log(res.data);
+      })
+      .catch((err)=>{
+        console.log(err.message)
+      })
+
 
       if (user.email) {
         alert("Sign up");

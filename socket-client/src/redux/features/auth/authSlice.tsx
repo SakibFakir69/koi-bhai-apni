@@ -7,12 +7,14 @@ interface User {
   name?: string;
   email: string;
   password: string;
+   userId:string,
 }
 
 const userInitialState: User = {
   name: "",
   email: "",
   password: "",
+   userId:"",
 };
 
 export const authSlices = createSlice({
