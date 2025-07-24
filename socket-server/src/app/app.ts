@@ -8,10 +8,11 @@ const App:Application = express();
 dotenv.config();
 
 
-import firstRouter from '../../routes/first.route';
+import userRouter from './routes/user.route';
+import { createUser } from './controllers/User.controller';
 
 // socket
-
+App.use(express.json());
 
 
 App.use(cors({
@@ -20,9 +21,9 @@ App.use(cors({
 }));
 
 
-App.use('/api', firstRouter);
 
 
+App.use('/api',userRouter)
 
 
 

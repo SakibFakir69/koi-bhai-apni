@@ -2,7 +2,7 @@ import App from "./app";
 
 import { createServer } from "http";
 import { Server } from "socket.io";
-import { initSocket } from "../../sockets/connection.socket";
+import { initSocket } from "./sockets/connection.socket";
 import mongoose from "mongoose";
 import { profile } from "console";
 
@@ -27,6 +27,7 @@ const startServer = async () => {
     if (!DB_URL) {
       return;
     }
+   
 
     await mongoose.connect(DB_URL);
     httpServer.listen(port, () => {
@@ -39,7 +40,9 @@ const startServer = async () => {
 };
 
 
+startServer()
 // production
+// use for  shout down server gracfully
 process.on("SIGINT", async () => {
   await mongoose.disconnect();
   httpServer.close(() => {
