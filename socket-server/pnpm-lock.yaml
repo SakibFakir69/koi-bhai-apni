@@ -46,7 +46,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/node':
-        specifier: ^24.0.7
+        specifier: ^24.1.0
         version: 24.1.0
       nodemon:
         specifier: ^3.1.10

@@ -6,8 +6,9 @@ import { Auth } from "../firebase/config";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
-import axios from 'axios'
-import { uuid } from 'uuidv4';
+import axios from "axios";
+import { v4 as uuidv4 } from "uuid"; // ✅ updated import
+
 interface FormValues {
   name: string;
   email: string;
@@ -15,9 +16,9 @@ interface FormValues {
 }
 
 const SignUp = () => {
-  
   const goHome = useNavigate();
   const dispatch = useDispatch();
+  const genrateId = uuidv4();
 
   const {
     register,
@@ -42,7 +43,7 @@ const SignUp = () => {
           name,
           email: user.email || " ",
           password: password,
-          userId:uuid(),
+          userId: genrateId,
         })
       );
 
@@ -50,18 +51,27 @@ const SignUp = () => {
 
       const userData = {
         ...data,
-         userId:uuid()
-      }
+        userId: genrateId,
+      };
 
+      axios
+        .post("http://localhost:5000/api/create-user", userData)
+        .then((res) => {
+          console.log(res.data, " ");
 
-      axios.post('http://localhost:5000/api/create-user',userData)
-      .then((res)=>{
-        console.log(res.data);
-      })
-      .catch((err)=>{
-        console.log(err.message)
-      })
+          const userId = res?.data?.data?.userId;
 
+          if (userId) {
+            localStorage.setItem("token-userId", userId);
+            console.log("User ID stored:", userId);
+          } else {
+            console.error("User ID missing in response:", res);
+          }
+        })
+
+        .catch((err) => {
+          console.log(err.message);
+        });
 
       if (user.email) {
         alert("Sign up");
@@ -75,11 +85,11 @@ const SignUp = () => {
 
   return (
     <div className=" bg-[#F9FAFB] min-h-screen md:p-2 p-10 flex justify-center items-center rounded w-full">
-
       <section className="flex flex-col bg-[#FFFFFF] md:w-1/2 w-full  border   border-black/10 p-8 h-[580px]">
-
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-y-4  ">
-
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-y-4  "
+        >
           <h1 className="text-4xl text-center font-semibold">Koi Bhai Apni</h1>
           <h3 className="text-3xl font-bold text-center text-green-500 mb-10">
             Welcome
@@ -88,7 +98,7 @@ const SignUp = () => {
           <input
             placeholder="Name"
             {...register("name", { required: "Name is required" })}
-             className="py-2 border border-stone-400/20 rounded px-3 "
+            className="py-2 border border-stone-400/20 rounded px-3 "
           />
           {errors.name && <span>{errors.name.message}</span>}
           {/* Email */}

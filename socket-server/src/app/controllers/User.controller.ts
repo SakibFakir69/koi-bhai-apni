@@ -9,7 +9,7 @@ const UserZodValidation = z.object({
   userId: z.string(),
   name: z.string().min(2).max(60),
   email: z.string().email(),
-  phone: z.string().min(10).max(15).optional(),
+  // phone: z.string().min(10).max(15).optional(),
   password: z.string().min(6).max(20),
 });
 
@@ -31,7 +31,7 @@ export const createUser = async (
     let { password, ...rest } = result.data;
 
     // email
-    const isUserxits =await User.findOne({ email:rest?.email });
+    const isUserxits = await User.findOne({ email: rest?.email });
     if (isUserxits) {
       res.status(400).json({
         status: false,
@@ -40,10 +40,10 @@ export const createUser = async (
       return;
     }
 
-    let hashPassword  =await bcryptjs.hash(password, 10);
+    let hashPassword = await bcryptjs.hash(password, 10);
     console.log("hash", password);
 
-    const newUser = await User.create({...rest, password:hashPassword});
+    const newUser = await User.create({ ...rest, password: hashPassword });
 
     res
       .status(201)
@@ -62,25 +62,43 @@ export const createUser = async (
 
 export const login_User = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  console.log(email, password);
 
-  const isUserxits = await User.findOne({ email: email });
+  try {
+    const isUserxits = await User.findOne({ email: email });
 
-  if (!isUserxits) {
-    res.status(404).json({
-      status: false,
-      message: "User not founded",
+    if (!isUserxits) {
+      res.status(404).json({
+        status: false,
+        message: "User not founded",
+      });
+      return;
+    }
+
+    const hashPassword = isUserxits.password;
+
+    const isHashPassword = await bcryptjs.compare(password, hashPassword);
+
+    if (!isHashPassword) {
+      res.status(404).json({
+        status: false,
+        message: "Password not match",
+      });
+      return;
+    }
+    console.log(email, password,isUserxits, isHashPassword);
+
+    res.status(200).json({
+      status: true,
+      message: "Login successfull",
+      token: isUserxits.userId,
     });
     return;
-  }
-
-  const hashPassword = isUserxits.password;
-
-  const isHashPassword =await  bcryptjs.compare(password, hashPassword);
-
-  if (!isHashPassword) {
-    res.status(404).json({
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
       status: false,
-      message: "Password not match",
+      message: "Failed to  Login User",
     });
     return;
   }

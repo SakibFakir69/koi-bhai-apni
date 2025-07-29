@@ -9,6 +9,7 @@ import {
 } from "firebase/auth";
 import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
+import axios from "axios";
 
 interface FormValues {
   name: string;
@@ -38,12 +39,35 @@ function SignIn() {
       const user = userCredintial.user;
 
       console.log("Form Data:", data);
-      dispatch(
-        signIn({
-          email: user.email || " ",
-          password: password,
-        })
-      );
+      // dispatch(
+      //   // signIn({
+      //   //   email: user.email || " ",
+      //   //   password: password,
+      //   // });
+
+      // );
+
+      try {
+        axios
+          .post("http://localhost:5000/api/login-user", data)
+
+          .then((res) => {
+            const userId = res?.data?.token;
+
+            if (userId) {
+              localStorage.setItem("token-userId", userId);
+              console.log("User ID stored:", userId);
+            } else {
+              console.error("User ID missing in response:", res);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            return;
+          });
+      } catch (error) {
+        console.log(error);
+      }
 
       if (user.email) {
         alert("Sign in");
@@ -57,12 +81,11 @@ function SignIn() {
 
   return (
     <div className=" bg-[#F9FAFB] min-h-screen md:p-2 p-8 flex justify-center items-center rounded w-full">
-
-      <section
-   
-        className=" flex-col bg-[#FFFFFF] md:w-1/2 w-full  border   border-black/10 p-10 h-[550px]"
-      >
-        <form  onSubmit={handleSubmit(onSubmit)}  className="flex flex-col gap-y-4  ">
+      <section className=" flex-col bg-[#FFFFFF] md:w-1/2 w-full  border   border-black/10 p-10 h-[550px]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-y-4  "
+        >
           <h1 className="text-4xl text-center font-semibold">Koi Bhai Apni</h1>
           <h3 className="text-3xl font-bold text-center text-green-500 mb-10">
             Welcome
@@ -110,7 +133,7 @@ function SignIn() {
           />
           {/* option */}
         </form>
-          <div className="flex justify-center flex-col items-center gap-y-4 mt-8">
+        <div className="flex justify-center flex-col items-center gap-y-4 mt-8">
           <h1 className="text-2xl font-semibold text-stone-600">
             Connect With
           </h1>
@@ -129,8 +152,6 @@ function SignIn() {
           </p>
         </div>
       </section>
-
-     
     </div>
   );
 }

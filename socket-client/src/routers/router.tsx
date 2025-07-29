@@ -12,6 +12,8 @@ export const router = createBrowserRouter(
             element:<App/>,
             
         },
+
+        
         {
             path:'/auth/signup',
             element:<SignUp/>

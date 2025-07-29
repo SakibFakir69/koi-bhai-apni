@@ -81,14 +81,14 @@ const MyLiveMap = () => {
       lng: position?.lng,
       id: socket.id,
     });
-    socket.on("recive-location", (data) => {
+    socket.on("share-location-recive", (data) => {
       setReciveLocation(data);
     });
   }, [position]);
   // jodi postion change hoye location pataba
 
   console.log(position, "pos");
-  console.log(reciveLocation, "recive");
+  console.log(reciveLocation, "recive-share");
 
   return (
     <>
